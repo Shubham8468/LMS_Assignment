@@ -11,7 +11,20 @@ const app = express();
 // Connect Database
 connectDB();
 
-app.use(cors());
+// CORS Configuration for Production
+const allowedOrigins = [
+  'https://lms-assignment-five.vercel.app/',
+  'http://localhost:3000',
+  'http://localhost:3001'
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 import authRoutes from './routes/authRoutes';
