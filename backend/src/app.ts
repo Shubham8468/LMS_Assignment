@@ -13,7 +13,7 @@ connectDB();
 
 // CORS Configuration for Production
 const allowedOrigins = [
-  'https://lms-assignment-five.vercel.app/',
+  'https://lms-assignment-five.vercel.app',
   'http://localhost:3000',
   'http://localhost:3001'
 ];
