@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Loan Management System - Frontend
 
-## Getting Started
+## Overview
+This repository contains the frontend application for the Loan Management System (LMS). It is a modern, responsive web application built with Next.js and React, designed to provide a seamless user interface for borrowers and staff to interact with the loan application and management processes.
 
-First, run the development server:
+## Technology Stack
+- **Framework:** Next.js
+- **Library:** React
+- **Styling:** Tailwind CSS
+- **Language:** TypeScript
+- **State Management & Data Fetching:** Context API, Axios
+- **Animations:** Framer Motion
+- **Notifications:** React Hot Toast
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Project Structure
+The application follows a standard Next.js App Router architecture:
+- `src/app/`: Contains all route components and page layouts.
+- `src/components/`: Reusable UI components.
+- `src/context/`: React context providers for global state management (e.g., AuthContext).
+- `src/utils/`: Utility functions and API configuration.
+- `public/`: Static assets such as images and icons.
+
+## Prerequisites
+Ensure you have the following installed on your local machine:
+- Node.js (v20 or higher recommended)
+- npm or yarn or pnpm
+
+## Installation
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+
+## Configuration
+Create a `.env.local` file in the root of the frontend directory and configure the necessary environment variables. Example variables may include API base URLs:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running the Application
+To start the development server, run:
+```bash
+npm run dev
+```
+The application will be accessible at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
+- `npm run dev`: Starts the application in development mode.
+- `npm run build`: Builds the application for production.
+- `npm run start`: Starts the production server.
+- `npm run lint`: Runs ESLint to check for code quality and styling issues.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Guidelines
+- Ensure strict typing with TypeScript to maintain codebase integrity.
+- Follow the established component structure and reuse existing UI elements where applicable.
+- Write descriptive commit messages following conventional commit standards.
