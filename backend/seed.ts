@@ -14,6 +14,8 @@ const users = [
     { name: 'Test Borrower', email: 'borrower@lms.com', password: 'password123', role: 'Borrower', personalDetails: { pan: 'ABCDE1234F', dob: '1995-05-15', monthlySalary: 50000, employmentMode: 'Salaried' } }
 ];
 
+
+
 const seedDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lms_assignment');

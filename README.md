@@ -833,6 +833,327 @@ A: Implement `/api/v1/` routes, plan migration path, maintain backward compatibi
 ---
 
 
+## Testing with Sample Data
+
+
+### Pre-seeded Test Users
+
+The project includes sample users for testing all features and roles. These users are automatically created when you run the seed script.
+
+
+### Test User Accounts - Complete Reference
+
+Below are all available test accounts with their complete details:
+
+```typescript
+const users = [
+    {
+        name: 'Admin User',
+        email: 'admin@lms.com',
+        password: 'password123',
+        role: 'Admin'
+    },
+    {
+        name: 'Sales Executive',
+        email: 'sales@lms.com',
+        password: 'password123',
+        role: 'Sales'
+    },
+    {
+        name: 'Sanction Executive',
+        email: 'sanction@lms.com',
+        password: 'password123',
+        role: 'Sanction'
+    },
+    {
+        name: 'Disbursement Executive',
+        email: 'disbursement@lms.com',
+        password: 'password123',
+        role: 'Disbursement'
+    },
+    {
+        name: 'Collection Executive',
+        email: 'collection@lms.com',
+        password: 'password123',
+        role: 'Collection'
+    },
+    {
+        name: 'Test Borrower',
+        email: 'borrower@lms.com',
+        password: 'password123',
+        role: 'Borrower',
+        personalDetails: {
+            pan: 'ABCDE1234F',
+            dob: '1995-05-15',
+            monthlySalary: 50000,
+            employmentMode: 'Salaried'
+        }
+    }
+];
+```
+
+
+### How to Seed the Database
+
+1. Navigate to backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Ensure MongoDB is running locally or configure MONGO_URI in .env
+
+3. Run the seed script:
+   ```bash
+   npx ts-node seed.ts
+   ```
+
+4. You should see: "Database Seeded Successfully"
+
+
+### Quick Reference: Login Credentials for Testing
+
+| User Role | Email | Password | Purpose |
+|-----------|-------|----------|---------|
+| Admin | admin@lms.com | password123 | Full system access, user management |
+| Sales | sales@lms.com | password123 | Borrower onboarding, loan application creation |
+| Sanction | sanction@lms.com | password123 | Loan approval/rejection decisions |
+| Disbursement | disbursement@lms.com | password123 | Fund release and payment tracking |
+| Collection | collection@lms.com | password123 | Payment collection and recovery |
+| Borrower | borrower@lms.com | password123 | Application submission and tracking |
+
+
+### Testing Each Role - Feature Overview
+
+#### 1. Admin (admin@lms.com)
+- Create and manage users
+- Assign roles and permissions
+- View system-wide reports
+- Modify system configurations
+- Access audit logs
+
+#### 2. Sales Representative (sales@lms.com)
+- Register new borrowers
+- Create loan applications
+- View customer details
+- Track application progress
+- Generate sales reports
+
+#### 3. Sanction Officer (sanction@lms.com)
+- Review pending applications
+- Run business rules eligibility checks
+- Approve or reject loan applications
+- Set loan terms and conditions
+- View sanction history
+
+#### 4. Disbursement Officer (disbursement@lms.com)
+- View approved loans
+- Disburse funds to borrower accounts
+- Track disbursement status
+- Generate disbursement reports
+
+#### 5. Collection Officer (collection@lms.com)
+- Track loan payments
+- Manage payment collections
+- Monitor defaulters
+- Send payment reminders
+- Generate collection reports
+
+#### 6. Borrower Portal (borrower@lms.com)
+- Submit loan applications through step-by-step form
+- View application status in real-time
+- Calculate estimated EMI
+- Download loan documents
+- View disbursement status
+
+
+### Complete Testing Workflows
+
+#### Test Workflow 1: End-to-End Loan Application
+
+1. Open http://localhost:3000
+2. Click Register and sign up as a new borrower (or use borrower@lms.com)
+3. Complete personal details:
+   - PAN: ABCDE1234F
+   - DOB: 1995-05-15
+   - Monthly Salary: 50000
+   - Employment Mode: Salaried
+
+4. Submit loan application for:
+   - Loan Amount: 500,000
+   - Interest Rate: 12%
+   - Tenure: 24 months
+   - Expected EMI: ~22,708 per month
+
+5. Logout and login as sales@lms.com
+   - View newly submitted application
+   - Verify all borrower details
+
+6. Logout and login as sanction@lms.com
+   - Review application
+   - Check eligibility (age, salary requirements)
+   - Approve loan
+
+7. Logout and login as disbursement@lms.com
+   - View approved loan
+   - Process disbursement
+   - Confirm fund transfer
+
+8. Logout and login as borrower@lms.com
+   - View updated application status
+   - See disbursement confirmation
+   - Download loan agreement
+
+
+#### Test Workflow 2: Role-Based Access Control Verification
+
+1. Login as borrower@lms.com
+   - Should only see: Dashboard, My Applications, Profile
+   - Should NOT see: Admin panel, user management
+
+2. Login as sales@lms.com
+   - Should see: Dashboard, All Applications, New Borrower Registration
+   - Should NOT see: Sanction options, disbursement functions
+
+3. Login as sanction@lms.com
+   - Should see: Pending Applications, Approve/Reject buttons
+   - Should NOT see: Borrower list management, disbursement
+
+4. Login as admin@lms.com
+   - Should see: ALL features
+   - Can create users, modify settings, view reports
+
+
+#### Test Workflow 3: Business Rules Engine (BRE) Testing
+
+Test case: Verify age and salary eligibility
+
+1. Create new borrower application with:
+   - Age: 21 years (minimum required)
+   - Monthly Salary: 20000
+   - Loan Request: 200000
+
+2. Login as sanction@lms.com
+   - Application should PASS eligibility
+   - Loan can be approved
+
+3. Create another application with:
+   - Age: 18 years (below minimum)
+   - Monthly Salary: 100000
+   - Loan Request: 500000
+
+4. Sanction officer should see eligibility FAILURE message
+   - Application marked ineligible
+   - Cannot approve loan
+
+
+#### Test Workflow 4: Loan Calculation Verification
+
+Using Borrower account (borrower@lms.com):
+
+1. Submit loan application:
+   - Principal (Loan Amount): 500,000
+   - Interest Rate: 12% per annum
+   - Tenure: 24 months
+
+2. Verify calculations:
+   - Total Interest = (500,000 × 12 × 2) / 100 = 120,000
+   - Total Amount = 500,000 + 120,000 = 620,000
+   - Monthly EMI = 620,000 / 24 = 25,833.33
+
+3. System should display EMI details:
+   - Principal portion per month
+   - Interest portion per month
+   - Total payment schedule
+
+
+### Sample Test Data Suggestions
+
+For comprehensive testing, create multiple borrower accounts:
+
+```typescript
+// Test Account 1: Salaried Employee (Eligible)
+{
+    name: 'Rajesh Kumar',
+    email: 'rajesh@test.com',
+    password: 'password123',
+    personalDetails: {
+        pan: 'ABCDE1234F',
+        dob: '1992-03-20',
+        monthlySalary: 75000,
+        employmentMode: 'Salaried'
+    }
+}
+
+// Test Account 2: Self-Employed (Check Eligibility)
+{
+    name: 'Priya Singh',
+    email: 'priya@test.com',
+    password: 'password123',
+    personalDetails: {
+        pan: 'FGHIJ5678K',
+        dob: '1988-07-10',
+        monthlySalary: 120000,
+        employmentMode: 'Self-Employed'
+    }
+}
+
+// Test Account 3: Contract Employee (Low Salary)
+{
+    name: 'Amit Patel',
+    email: 'amit@test.com',
+    password: 'password123',
+    personalDetails: {
+        pan: 'KLMNO9101P',
+        dob: '2000-11-05',
+        monthlySalary: 18000,
+        employmentMode: 'Contract'
+    }
+}
+```
+
+
+### Testing Checklist
+
+Before deployment, verify:
+
+- [ ] Borrower can register and complete profile
+- [ ] Borrower can submit multi-step loan application
+- [ ] Sales officer can view all applications
+- [ ] Sanction officer receives eligibility results
+- [ ] Sanction officer can approve/reject loans
+- [ ] Disbursement officer can process approved loans
+- [ ] Collection officer can track payments
+- [ ] Admin can create and manage users
+- [ ] Role-based dashboards display correctly
+- [ ] EMI calculations are accurate
+- [ ] Age and salary eligibility rules work
+- [ ] Unauthorized access is blocked
+- [ ] All status transitions work correctly
+
+
+### Troubleshooting Test Issues
+
+If seeding fails:
+```bash
+# Verify MongoDB is running
+mongosh
+
+# Check connection string in .env
+MONGO_URI=mongodb://127.0.0.1:27017/lms_assignment
+
+# Clear database and reseed
+npx ts-node seed.ts
+```
+
+If credentials don't work:
+1. Verify seed script ran successfully
+2. Check MongoDB collections for users
+3. Ensure frontend and backend are both running
+4. Clear browser localStorage and try again
+
+---
+
+
 ## License & Attribution
 
 
@@ -845,6 +1166,6 @@ This project is designed as a learning resource for professionals and graduates.
 **Happy Learning!**
 
 
-For setup instructions, see [README.md](README.md)
+For complete architecture and best practices, see [PROFESSIONALS_AND_GRADUATES.md](PROFESSIONALS_AND_GRADUATES.md)
 
 
